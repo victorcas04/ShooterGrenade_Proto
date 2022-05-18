@@ -72,6 +72,11 @@ void AShooterPlayerState::AddRocketsFired(int32 NumRockets)
 	NumRocketsFired += NumRockets;
 }
 
+void AShooterPlayerState::AddGrenadesFired(int32 NumGrenades)
+{
+	NumGrenadesFired += NumGrenades;
+}
+
 void AShooterPlayerState::SetQuitter(bool bInQuitter)
 {
 	bQuitter = bInQuitter;

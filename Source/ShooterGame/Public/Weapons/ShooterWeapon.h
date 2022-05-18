@@ -90,6 +90,15 @@ struct FWeaponAnim
 	{
 	}
 };
+	
+enum class EAmmoType
+{
+	EBullet,
+	ERocket,
+	EBouncingGrenade,
+	EStickyGrenade,
+	EMax,
+};
 
 UCLASS(Abstract, Blueprintable)
 class AShooterWeapon : public AActor
@@ -103,13 +112,6 @@ class AShooterWeapon : public AActor
 
 	//////////////////////////////////////////////////////////////////////////
 	// Ammo
-	
-	enum class EAmmoType
-	{
-		EBullet,
-		ERocket,
-		EMax,
-	};
 
 	/** [server] add ammo */
 	void GiveAmmo(int AddAmount);

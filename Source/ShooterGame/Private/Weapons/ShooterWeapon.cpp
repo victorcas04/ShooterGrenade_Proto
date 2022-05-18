@@ -406,6 +406,14 @@ void AShooterWeapon::UseAmmo()
 				PlayerState->AddRocketsFired(1);
 				break;
 			case EAmmoType::EBullet:
+				PlayerState->AddBulletsFired(1);
+				break;
+			case EAmmoType::EBouncingGrenade:
+				PlayerState->AddGrenadesFired(1);
+				break;
+			case EAmmoType::EStickyGrenade:
+				PlayerState->AddGrenadesFired(1);
+				break;
 			default:
 				PlayerState->AddBulletsFired(1);
 				break;

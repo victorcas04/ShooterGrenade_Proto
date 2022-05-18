@@ -78,6 +78,7 @@ class AShooterPlayerState : public APlayerState
 	//We don't need stats about amount of ammo fired to be server authenticated, so just increment these with local functions
 	void AddBulletsFired(int32 NumBullets);
 	void AddRocketsFired(int32 NumRockets);
+	void AddGrenadesFired(int32 NumGrenades);
 
 	/** Set whether the player is a quitter */
 	void SetQuitter(bool bInQuitter);
@@ -111,6 +112,10 @@ protected:
 	UPROPERTY()
 	int32 NumRocketsFired;
 
+	/** number of greandes fired this match */
+	UPROPERTY()
+	int32 NumGrenadesFired;
+	
 	/** whether the user quit the match */
 	UPROPERTY()
 	uint8 bQuitter : 1;
