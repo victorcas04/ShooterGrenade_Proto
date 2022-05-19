@@ -94,20 +94,14 @@ class AShooterWeapon_Grenade : public AShooterWeapon
 	UPROPERTY(EditDefaultsOnly, Category=Config)
 	FGrenadeWeaponData GrenadeConfig;
 
-	// TODO:
-	// destroy trajectory
 	virtual void Destroyed() override;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Input
 
 	/** [local + server] start weapon fire */
-	// TODO:
-	// start holding
 	virtual void StartFire() override;
 
-	// TODO:
-	// end holding
 	/** [local + server] stop weapon fire */
 	virtual void StopFire() override;
 
@@ -138,19 +132,31 @@ protected:
 	virtual void OnBurstFinished() override;
 
 private:
+
+	UPROPERTY()
+	float DelayRecalculateTrajectory = .1f;
+
+	UPROPERTY()
+	FTimerHandle RecalculateTrajectoryHandle;
+	
 	// TODO:
 	// Show trajectory
-	// Hold animation
+	// Hold animation (must be looping)
 	UFUNCTION()
 	void OnHoldStart();
 
+	// TODO:
+	// Recalculate trajectory
+	UFUNCTION()
+	void OnHoldLoop();
+	
 	// TODO:
 	// Hide trajectory
 	// Throw grenade anim
 	// Grenade follow trajectory
 	// Reduce uses
 	UFUNCTION()
-	void OnHoldEnd();
+	void OnHoldRelease();
 
 	// TODO:
 	// Hide trajectory
