@@ -9,6 +9,8 @@
 #include "Animation/AnimInstance.h"
 #include "Sound/SoundNodeLocalPlayer.h"
 #include "AudioThread.h"
+#include "GrenadeManagerComp.h"
+#include "Utils/GrenadeTestHelpers.h"
 
 static int32 NetVisualizeRelevancyTestPoints = 0;
 FAutoConsoleVariableRef CVarNetVisualizeRelevancyTestPoints(
@@ -884,6 +886,11 @@ void AShooterCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &AShooterCharacter::OnStartRunning);
 	PlayerInputComponent->BindAction("RunToggle", IE_Pressed, this, &AShooterCharacter::OnStartRunningToggle);
 	PlayerInputComponent->BindAction("Run", IE_Released, this, &AShooterCharacter::OnStopRunning);
+
+	PlayerInputComponent->BindAction("Grenade", IE_Pressed, this, &AShooterCharacter::OnGrenadeStartHold);
+	PlayerInputComponent->BindAction("Grenade", IE_Released, this, &AShooterCharacter::OnGrenadeStopHold);
+	// CAS TODO: 
+	// "cancel fire" -> pressed -> grenade cancel throw
 }
 
 
@@ -1163,6 +1170,34 @@ void AShooterCharacter::OnStopJump()
 {
 	bPressedJump = false;
 	StopJumping();
+}
+
+void AShooterCharacter::OnGrenadeStartHold()
+{
+	AShooterPlayerController* MyPC = Cast<AShooterPlayerController>(Controller);
+	if (IsValid(MyPC) && MyPC->IsGameInputAllowed())
+	{
+		GTestEObjectIsValid ValidComp;
+		auto ActorComp = GrenadeTestHelpers::GetValidatedComponentByClass(
+			this, UGrenadeManagerComp::StaticClass(), ValidComp);
+		
+		if(ValidComp == GTestEObjectIsValid::Valid)
+		{
+			Cast<UGrenadeManagerComp>(ActorComp)->HoldGrenadeButton();
+		}
+	}
+}
+
+void AShooterCharacter::OnGrenadeStopHold()
+{
+	GTestEObjectIsValid ValidComp;
+	auto ActorComp = GrenadeTestHelpers::GetValidatedComponentByClass(
+		this, UGrenadeManagerComp::StaticClass(), ValidComp);
+		
+	if(ValidComp == GTestEObjectIsValid::Valid)
+	{
+		Cast<UGrenadeManagerComp>(ActorComp)->ReleaseGrenadeButton();
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////

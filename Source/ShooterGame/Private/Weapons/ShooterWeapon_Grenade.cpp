@@ -68,6 +68,8 @@ void AShooterWeapon_Grenade::OnHoldStart()
 void AShooterWeapon_Grenade::OnHoldLoop()
 {
 	GEngine->AddOnScreenDebugMessage(-1, DelayRecalculateTrajectory, FColor::Green, "Recalculate trajectory");
+	// CAS TODO:
+	// trajectory var = new trajectory
 }
 
 void AShooterWeapon_Grenade::OnHoldRelease()

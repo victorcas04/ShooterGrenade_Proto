@@ -192,6 +192,15 @@ class AShooterCharacter : public ACharacter
 	/** player released jump action */
 	void OnStopJump();
 
+	/** player pressed grenade action */
+	void OnGrenadeStartHold();
+
+	/** player released grenade action */
+	void OnGrenadeStopHold();
+
+	// CAS TODO: 
+	// void grenade cancel throw
+	
 	/** player pressed run action */
 	void OnStartRunning();
 
