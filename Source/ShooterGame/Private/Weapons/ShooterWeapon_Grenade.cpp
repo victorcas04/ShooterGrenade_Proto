@@ -16,9 +16,6 @@ void AShooterWeapon_Grenade::StartFire()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Cyan, "Pressed Fire");
 	OnHoldStart();
-	GetPawnOwner()->GetWorldTimerManager().SetTimer(RecalculateTrajectoryHandle, this,
-																	&AShooterWeapon_Grenade::OnHoldLoop,
-																	DelayRecalculateTrajectory, true);
 }
 
 void AShooterWeapon_Grenade::StopFire()
@@ -59,7 +56,13 @@ void AShooterWeapon_Grenade::OnBurstFinished()
 
 void AShooterWeapon_Grenade::OnHoldStart()
 {
+	if(!IsValid(GetPawnOwner()) ||
+		GetPawnOwner()->GetWorldTimerManager().IsTimerActive(RecalculateTrajectoryHandle)) return;
+	
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Cyan, "Show trajectory");
+	GetPawnOwner()->GetWorldTimerManager().SetTimer(RecalculateTrajectoryHandle, this,
+																	&AShooterWeapon_Grenade::OnHoldLoop,
+																	DelayRecalculateTrajectory, true);
 }
 
 void AShooterWeapon_Grenade::OnHoldLoop()
@@ -75,6 +78,9 @@ void AShooterWeapon_Grenade::OnHoldRelease()
 
 void AShooterWeapon_Grenade::OnHoldCancel()
 {
+	if(!IsValid(GetPawnOwner()) ||
+		!GetPawnOwner()->GetWorldTimerManager().IsTimerActive(RecalculateTrajectoryHandle)) return;
+	
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Cyan, "Hide trajectory");
 	GetPawnOwner()->GetWorldTimerManager().ClearTimer(RecalculateTrajectoryHandle);
 }
