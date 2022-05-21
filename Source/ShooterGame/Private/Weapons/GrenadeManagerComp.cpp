@@ -2,54 +2,73 @@
 
 #include "GrenadeManagerComp.h"
 
-// Sets default values for this component's properties
 UGrenadeManagerComp::UGrenadeManagerComp()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-
-// Called when the game starts
 void UGrenadeManagerComp::BeginPlay()
 {
 	Super::BeginPlay();
-	
 	SetComponentTickEnabled(false);
+}
+
+void UGrenadeManagerComp::TickComponent(float DeltaTime, ELevelTick TickType,
+										FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+}
+
+void UGrenadeManagerComp::CancelCurrentThrow()
+{
+	if(!IsValid(CurrentEquippedGrenade)) return;
+	CurrentEquippedGrenade->OnHoldCancel();
 }
 
 void UGrenadeManagerComp::EquipWeapon()
 {
 	// CAS TODO:
+	// call equip net weapon function
+	// make equipped grenade null
+	
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Cyan, "Equip weapon");
 }
 
-void UGrenadeManagerComp::SwapGrenade()
+void UGrenadeManagerComp::EquipNextGrenade()
 {
 	// CAS TODO:
+	// if !equipped grenade -> equip first grenade
+	// else
 	// cycle through grenade array
-}
-
-// Called every frame
-void UGrenadeManagerComp::TickComponent(float DeltaTime, ELevelTick TickType,
-                                        FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Cyan, "Equip grenade");
 }
 
 void UGrenadeManagerComp::HoldGrenadeButton()
 {
-	// if !grenade equipped -> equip grenade
-	// else
-	// set timer with hold time to equip weapon -> ReleaseGrenadeButton 
+	if(IsGrenadeEquipped())
+	{
+		if(GetOwner()->GetWorldTimerManager().IsTimerActive(HoldToEquipWeaponHandle)) return;
+		GetOwner()->GetWorldTimerManager().SetTimer(HoldToEquipWeaponHandle, this,
+																		&UGrenadeManagerComp::ReleaseGrenadeButton,
+																		TimeHoldToEquipWeapon, true);
+	}
+	else
+	{
+		EquipNextGrenade();
+	}
 }
 
 void UGrenadeManagerComp::ReleaseGrenadeButton()
 {
-	// CAS TODO:
-	// if timer handle is !valid -> return
-	// timer handle elapsed time >= hold time to equip weapon -> equip weapon
-	// else -> swap grenades
-	// clear timer handle
+	if(!GetOwner()->GetWorldTimerManager().IsTimerActive(HoldToEquipWeaponHandle)) return;
+	if(GetOwner()->GetWorldTimerManager().GetTimerElapsed(HoldToEquipWeaponHandle) >= TimeHoldToEquipWeapon)
+	{
+		EquipWeapon();
+	}
+	else
+	{
+		EquipNextGrenade();
+	}
+	GetOwner()->GetWorldTimerManager().ClearTimer(HoldToEquipWeaponHandle);
 }

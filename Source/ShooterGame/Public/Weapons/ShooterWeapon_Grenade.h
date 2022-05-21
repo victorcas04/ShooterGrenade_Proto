@@ -104,9 +104,6 @@ class AShooterWeapon_Grenade : public AShooterWeapon
 
 	/** [local + server] stop weapon fire */
 	virtual void StopFire() override;
-
-	// CAS TODO:
-	// add function for cancel holding input (right click)
 	
 	/** [all] start weapon reload */
 	virtual void StartReload(bool bFromReplication = false) override;
@@ -116,7 +113,10 @@ class AShooterWeapon_Grenade : public AShooterWeapon
 
 	/** [server] performs actual reload */
 	virtual void ReloadWeapon() override;
-
+	
+	UFUNCTION()
+	void OnHoldCancel();
+	
 protected:
 
 	//////////////////////////////////////////////////////////////////////////
@@ -142,28 +142,12 @@ private:
 	UPROPERTY()
 	FTimerHandle RecalculateTrajectoryHandle;
 	
-	// CAS TODO:
-	// Show trajectory
-	// Hold animation (must be looping)
 	UFUNCTION()
 	void OnHoldStart();
 
-	// CAS TODO:
-	// Recalculate trajectory
 	UFUNCTION()
 	void OnHoldLoop();
-	
-	// CAS TODO:
-	// Hide trajectory
-	// Throw grenade anim
-	// Grenade follow trajectory
-	// Reduce uses
+
 	UFUNCTION()
 	void OnHoldRelease();
-
-	// CAS TODO:
-	// Hide trajectory
-	// Back to idle anim
-	UFUNCTION()
-	void OnHoldCancel();
 };

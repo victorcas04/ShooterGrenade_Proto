@@ -2,6 +2,7 @@
 
 #pragma once
 #include "CoreMinimal.h"
+#include "ShooterWeapon_Grenade.h"
 #include "Components/ActorComponent.h"
 #include "GrenadeManagerComp.generated.h"
 
@@ -18,6 +19,9 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool IsGrenadeEquipped() { return IsValid(CurrentEquippedGrenade); }
+	
 	UFUNCTION()
 	void HoldGrenadeButton();
 
@@ -27,17 +31,23 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Hold Grenade Input")
 	float TimeHoldToEquipWeapon = 1.5f;
 	
-	// CAS TODO:
-	// TArray<GrenadeWeapon>
+	UPROPERTY(EditDefaultsOnly, Category="Grenades")
+	TArray<AShooterWeapon_Grenade*> ArrayGrenades;
+
+	UFUNCTION(BlueprintCallable)
+	void CancelCurrentThrow();
 	
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	UPROPERTY(VisibleAnywhere)
+	AShooterWeapon_Grenade* CurrentEquippedGrenade;
+
 private:
 
 	void EquipWeapon();
-	void SwapGrenade();
+	void EquipNextGrenade();
 	
 	FTimerHandle HoldToEquipWeaponHandle;
 	

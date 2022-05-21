@@ -888,9 +888,8 @@ void AShooterCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	PlayerInputComponent->BindAction("Run", IE_Released, this, &AShooterCharacter::OnStopRunning);
 
 	PlayerInputComponent->BindAction("Grenade", IE_Pressed, this, &AShooterCharacter::OnGrenadeStartHold);
-	PlayerInputComponent->BindAction("Grenade", IE_Released, this, &AShooterCharacter::OnGrenadeStopHold);
-	// CAS TODO: 
-	// "cancel fire" -> pressed -> grenade cancel throw
+	PlayerInputComponent->BindAction("Grenade", IE_Released, this, &AShooterCharacter::OnGrenadeReleaseHold);
+	PlayerInputComponent->BindAction("GrenadeCancel", IE_Pressed, this, &AShooterCharacter::OnGrenadeCancelHold);
 }
 
 
@@ -975,6 +974,16 @@ void AShooterCharacter::OnStopFire()
 
 void AShooterCharacter::OnStartTargeting()
 {
+	GTestEObjectIsValid ValidComp;
+	auto ActorComp = GrenadeTestHelpers::GetValidatedComponentByClass(
+		this, UGrenadeManagerComp::StaticClass(), ValidComp);
+		
+	if(ValidComp == GTestEObjectIsValid::Valid)
+	{
+		// we need to do this check here to avoid zooming in while canceling a grenade throw
+		if(Cast<UGrenadeManagerComp>(ActorComp)->IsGrenadeEquipped()) return;
+	}
+	
 	AShooterPlayerController* MyPC = Cast<AShooterPlayerController>(Controller);
 	if (MyPC && MyPC->IsGameInputAllowed())
 	{
@@ -1188,7 +1197,7 @@ void AShooterCharacter::OnGrenadeStartHold()
 	}
 }
 
-void AShooterCharacter::OnGrenadeStopHold()
+void AShooterCharacter::OnGrenadeReleaseHold()
 {
 	GTestEObjectIsValid ValidComp;
 	auto ActorComp = GrenadeTestHelpers::GetValidatedComponentByClass(
@@ -1197,6 +1206,18 @@ void AShooterCharacter::OnGrenadeStopHold()
 	if(ValidComp == GTestEObjectIsValid::Valid)
 	{
 		Cast<UGrenadeManagerComp>(ActorComp)->ReleaseGrenadeButton();
+	}
+}
+
+void AShooterCharacter::OnGrenadeCancelHold()
+{
+	GTestEObjectIsValid ValidComp;
+	auto ActorComp = GrenadeTestHelpers::GetValidatedComponentByClass(
+		this, UGrenadeManagerComp::StaticClass(), ValidComp);
+		
+	if(ValidComp == GTestEObjectIsValid::Valid)
+	{
+		Cast<UGrenadeManagerComp>(ActorComp)->CancelCurrentThrow();
 	}
 }
 
