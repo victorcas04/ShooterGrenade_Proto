@@ -32,7 +32,7 @@ public:
 	float TimeHoldToEquipWeapon = 1.5f;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Grenades")
-	TArray<AShooterWeapon_Grenade*> ArrayGrenades;
+	TArray<TSubclassOf<class AShooterWeapon_Grenade>> ArrayGrenades;
 
 	UFUNCTION(BlueprintCallable)
 	void CancelCurrentThrow();
@@ -42,7 +42,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleAnywhere)
-	AShooterWeapon_Grenade* CurrentEquippedGrenade;
+	class AShooterWeapon_Grenade* CurrentEquippedGrenade;
 
 private:
 

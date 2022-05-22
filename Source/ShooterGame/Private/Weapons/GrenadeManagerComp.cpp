@@ -40,6 +40,7 @@ void UGrenadeManagerComp::EquipNextGrenade()
 	// if !equipped grenade -> equip first grenade
 	// else
 	// cycle through grenade array
+	//AShooterWeapon* NewWeapon = GetWorld()->SpawnActor<AShooterWeapon>(DefaultInventoryClasses[i], SpawnInfo);
 	
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Cyan, "Equip grenade");
 }
