@@ -19,8 +19,8 @@ enum class EGrenadeType
 	EMax,
 };
 
-USTRUCT()
-struct FGrenadeWeaponData
+USTRUCT(BlueprintType)
+struct FGrenadeTrajectoryData
 {
 	GENERATED_USTRUCT_BODY()
 
@@ -28,56 +28,42 @@ struct FGrenadeWeaponData
 	UPROPERTY(EditDefaultsOnly, Category="Type")
 	EGrenadeType GrenadeType = EGrenadeType::EBouncing;
 	
-	/** base weapon spread (degrees) */
-	UPROPERTY(EditDefaultsOnly, Category=Accuracy)
-	float WeaponSpread;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ThrowForce = 100.0f;
+	
+	// Projectile radius, used when tracing for collision. If <= 0, a line trace is used instead.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ProjectileRadius = 5.f;
 
-	/** targeting spread modifier */
-	UPROPERTY(EditDefaultsOnly, Category=Accuracy)
-	float TargetingSpreadMod;
+	// Object type to use, when checking collisions.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes = TArray<TEnumAsByte<EObjectTypeQuery>>({
+		UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldStatic),
+		UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic),
+		UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn)
+	});
 
-	/** continuous firing: spread increment */
-	UPROPERTY(EditDefaultsOnly, Category=Accuracy)
-	float FiringSpreadIncrement;
-
-	/** continuous firing: max increment */
-	UPROPERTY(EditDefaultsOnly, Category=Accuracy)
-	float FiringSpreadMax;
-
-	/** weapon range */
-	UPROPERTY(EditDefaultsOnly, Category=WeaponStat)
-	float WeaponRange;
-
-	/** damage amount */
-	UPROPERTY(EditDefaultsOnly, Category=WeaponStat)
-	int32 HitDamage;
-
-	/** type of damage */
-	UPROPERTY(EditDefaultsOnly, Category=WeaponStat)
-	TSubclassOf<UDamageType> DamageType;
-
-	/** hit verification: scale for bounding box of hit actor */
-	UPROPERTY(EditDefaultsOnly, Category=HitVerification)
-	float ClientSideHitLeeway;
-
-	/** hit verification: threshold for dot product between view direction and hit direction */
-	UPROPERTY(EditDefaultsOnly, Category=HitVerification)
-	float AllowedViewDotHitDir;
-
-	/** defaults */
-	FGrenadeWeaponData()
-	{
-		GrenadeType = EGrenadeType::EBouncing;
-		WeaponSpread = 5.0f;
-		TargetingSpreadMod = 0.25f;
-		FiringSpreadIncrement = 1.0f;
-		FiringSpreadMax = 10.0f;
-		WeaponRange = 10000.0f;
-		HitDamage = 10;
-		DamageType = UDamageType::StaticClass();
-		ClientSideHitLeeway = 200.0f;
-		AllowedViewDotHitDir = 0.8f;
-	}
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<AActor*> ActorsToIgnore;
+	
+	/**
+	 *	Determines size of each sub-step in the simulation (ms).
+	 *	10 = +quality
+	 *	30 = +performance
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin=10.0f, ClampMax=30.0f))
+	float SimFrequency = 10.0f;
+	
+	// Maximum simulation time for the virtual projectile.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float MaxSimTime = 3.f;
+	
+	// The acceleration of the gravity
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float Gravity = 980.7f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool ShowTraceDebug = false;
 };
 
 /**
@@ -92,8 +78,8 @@ class AShooterWeapon_Grenade : public AShooterWeapon
 	
 	virtual EAmmoType GetAmmoType() const override
 	{
-		if(GrenadeConfig.GrenadeType == EGrenadeType::EBouncing) return EAmmoType::EBouncingGrenade;
-		if(GrenadeConfig.GrenadeType == EGrenadeType::ESticky) return EAmmoType::EStickyGrenade;
+		if(TrajectoryConfig.GrenadeType == EGrenadeType::EBouncing) return EAmmoType::EBouncingGrenade;
+		if(TrajectoryConfig.GrenadeType == EGrenadeType::ESticky) return EAmmoType::EStickyGrenade;
 		return EAmmoType::EMax;
 	}
 
@@ -102,7 +88,7 @@ class AShooterWeapon_Grenade : public AShooterWeapon
 	
 	/** weapon config */
 	UPROPERTY(EditDefaultsOnly, Category=Config)
-	FGrenadeWeaponData GrenadeConfig;
+	FGrenadeTrajectoryData TrajectoryConfig;
 
 	virtual void Destroyed() override;
 

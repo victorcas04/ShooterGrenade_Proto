@@ -9,7 +9,7 @@
 #include "Animation/AnimInstance.h"
 #include "Sound/SoundNodeLocalPlayer.h"
 #include "AudioThread.h"
-#include "GrenadeManagerComp.h"
+#include "Grenade/GrenadeManagerComp.h"
 #include "Utils/GrenadeTestHelpers.h"
 
 static int32 NetVisualizeRelevancyTestPoints = 0;

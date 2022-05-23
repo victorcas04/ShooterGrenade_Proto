@@ -1,8 +1,7 @@
 // Copyright victorcas
 
-#include "Weapons/ShooterWeapon_Grenade.h"
-
-#include "Grenade.h"
+#include "Grenade/ShooterWeapon_Grenade.h"
+#include "Grenade/Grenade.h"
 
 AShooterWeapon_Grenade::AShooterWeapon_Grenade(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) { }
 

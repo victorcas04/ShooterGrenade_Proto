@@ -1,6 +1,6 @@
 ﻿// Copyright victorcas
 
-#include "GrenadeManagerComp.h"
+#include "Grenade/GrenadeManagerComp.h"
 
 UGrenadeManagerComp::UGrenadeManagerComp()
 {

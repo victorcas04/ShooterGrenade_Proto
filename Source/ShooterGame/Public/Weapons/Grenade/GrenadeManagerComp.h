@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "GrenadeManagerComp.generated.h"
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable)
 class SHOOTERGAME_API UGrenadeManagerComp : public UActorComponent
 {
 	GENERATED_BODY()

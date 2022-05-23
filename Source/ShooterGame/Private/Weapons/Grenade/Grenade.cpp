@@ -1,6 +1,6 @@
 ﻿// victorcas
 
-#include "Grenade.h"
+#include "Grenade/Grenade.h"
 
 AGrenade::AGrenade()
 {
