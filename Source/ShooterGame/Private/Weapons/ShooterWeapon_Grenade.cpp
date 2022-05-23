@@ -47,9 +47,10 @@ void AShooterWeapon_Grenade::FireWeapon()
 		FActorSpawnParameters SpawnInfo;
 		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		AGrenade* Grenade = GetWorld()->SpawnActor<AGrenade>(GrenadeClassToSpawn, SpawnInfo);
+		
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Cyan, "Spawn grenade with trajectory parameter");
 	}
 	
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Cyan, "Spawn grenade with trajectory parameter");
 }
 
 void AShooterWeapon_Grenade::OnBurstStarted()
@@ -71,11 +72,13 @@ void AShooterWeapon_Grenade::OnHoldStart()
 	
 	if(!IsValid(GetPawnOwner()) ||
 		GetPawnOwner()->GetWorldTimerManager().IsTimerActive(RecalculateTrajectoryHandle)) return;
-	
+
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Cyan, "Show trajectory");
 	GetPawnOwner()->GetWorldTimerManager().SetTimer(RecalculateTrajectoryHandle, this,
 																	&AShooterWeapon_Grenade::OnHoldLoop,
 																	DelayRecalculateTrajectory, true);
+	
+	bCanShoot = true;
 }
 
 void AShooterWeapon_Grenade::OnHoldLoop()
@@ -98,7 +101,7 @@ void AShooterWeapon_Grenade::OnHoldRelease()
 	// Grenade follow trajectory
 	// Reduce uses
 	
-	FireWeapon();
+	if(bCanShoot) FireWeapon();
 	OnHoldCancel();
 }
 
@@ -109,6 +112,7 @@ void AShooterWeapon_Grenade::OnHoldCancel()
 	// Hide trajectory
 	// Back to idle anim
 	
+	bCanShoot = false;
 	if(!IsValid(GetPawnOwner()) ||
 		!GetPawnOwner()->GetWorldTimerManager().IsTimerActive(RecalculateTrajectoryHandle)) return;
 	

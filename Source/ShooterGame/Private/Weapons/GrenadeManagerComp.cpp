@@ -78,12 +78,13 @@ void UGrenadeManagerComp::EquipNextGrenade()
 		
 		const TSubclassOf<class AShooterWeapon_Grenade> EquippedGrenadeClass = GetGrenadeEquippedOrNull()->GetClass();
 		const int StartPos = ArrayGrenadeClasses.IndexOfByKey(EquippedGrenadeClass);
-		for(int i = StartPos + 1; ArrayGrenadeClasses[i] != EquippedGrenadeClass;)
+
+		for(int i = StartPos; ;)
 		{
-			if(i >= ArrayGrenadeClasses.Num()) i = 0;
+			++i; if(i >= ArrayGrenadeClasses.Num()) i = 0;
+			if(ArrayGrenadeClasses[i] == EquippedGrenadeClass) break;
 			GrenadeToEquip = SpawnGrenadeWeaponOfClass(ArrayGrenadeClasses[i]);
 			if(IsValid(GrenadeToEquip)) break;
-			++i;
 		}
 	}
 	if(IsValid(GrenadeToEquip))

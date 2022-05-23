@@ -145,6 +145,9 @@ private:
 
 	// CAS TODO:
 	// trajectory var
+
+	UPROPERTY()
+	bool bCanShoot = false;
 	
 	UPROPERTY()
 	float DelayRecalculateTrajectory = .1f;
