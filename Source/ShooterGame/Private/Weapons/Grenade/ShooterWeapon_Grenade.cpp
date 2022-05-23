@@ -75,7 +75,7 @@ void AShooterWeapon_Grenade::OnHoldStart()
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Cyan, "Show trajectory");
 	GetPawnOwner()->GetWorldTimerManager().SetTimer(RecalculateTrajectoryHandle, this,
 																	&AShooterWeapon_Grenade::OnHoldLoop,
-																	DelayRecalculateTrajectory, true);
+																	TrajectoryConfig.DelayRecalculateTrajectory, true);
 	
 	bCanShoot = true;
 }
@@ -85,8 +85,42 @@ void AShooterWeapon_Grenade::OnHoldLoop()
 	
 	// CAS TODO:
 	// Recalculate trajectory
-	
-	GEngine->AddOnScreenDebugMessage(-1, DelayRecalculateTrajectory, FColor::Green, "Recalculate trajectory");
+
+	/*
+	FVector Velocity = FVector(1.0f, 1.0f, 1.0f) * TrajectoryConfig.ThrowForce;
+	FPredictProjectilePathParams Params = FPredictProjectilePathParams(TrajectoryConfig.ProjectileRadius, GetPawnOwner()->GetActorLocation(), Velocity,
+		TrajectoryConfig.MaxSimTime, TrajectoryConfig.ObjectTypes, TrajectoryConfig.ActorsToIgnore);
+	FPredictProjectilePathParams
+	*/
+
+	/*
+	FPredictProjectilePathParams Params = FPredictProjectilePathParams(ProjectileRadius, StartPos, LaunchVelocity, MaxSimTime);
+	Params.bTraceWithCollision = bTracePath;
+	Params.bTraceComplex = bTraceComplex;
+	Params.ActorsToIgnore = ActorsToIgnore;
+	Params.DrawDebugType = DrawDebugType;
+	Params.DrawDebugTime = DrawDebugTime;
+	Params.SimFrequency = SimFrequency;
+	Params.OverrideGravityZ = OverrideGravityZ;
+	Params.ObjectTypes = ObjectTypes; // Object trace
+	Params.bTraceWithChannel = false;
+
+	// Do the trace
+	FPredictProjectilePathResult PredictResult;
+	bool bHit = PredictProjectilePath(WorldContextObject, Params, PredictResult);
+
+	// Fill in results.
+	OutHit = PredictResult.HitResult;
+	OutLastTraceDestination = PredictResult.LastTraceDestination.Location;
+	OutPathPositions.Empty(PredictResult.PathData.Num());
+	for (const FPredictProjectilePathPointData& PathPoint : PredictResult.PathData)
+	{
+		OutPathPositions.Add(PathPoint.Location);
+	}
+	return bHit;
+	*/
+
+	GEngine->AddOnScreenDebugMessage(-1, TrajectoryConfig.DelayRecalculateTrajectory, FColor::Green, "Recalculate trajectory");
 	// CAS TODO:
 	// trajectory var = new trajectory
 }

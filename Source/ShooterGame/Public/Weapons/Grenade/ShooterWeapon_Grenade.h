@@ -25,18 +25,18 @@ struct FGrenadeTrajectoryData
 	GENERATED_USTRUCT_BODY()
 
 	/** base grenade type */
-	UPROPERTY(EditDefaultsOnly, Category="Type")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EGrenadeType GrenadeType = EGrenadeType::EBouncing;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float ThrowForce = 100.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin=1.0f, ClampMax=1000.0f))
+	float ThrowForce = 1000.0f;
 	
 	// Projectile radius, used when tracing for collision. If <= 0, a line trace is used instead.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float ProjectileRadius = 5.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin=1.0f, ClampMax=100.0f))
+	float ProjectileRadius = 10.0f;
 
 	// Object type to use, when checking collisions.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes = TArray<TEnumAsByte<EObjectTypeQuery>>({
 		UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldStatic),
 		UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic),
@@ -45,25 +45,28 @@ struct FGrenadeTrajectoryData
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<AActor*> ActorsToIgnore;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool ShowTraceDebug = false;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin=0.01f))
+	float DelayRecalculateTrajectory = .1f;
 	
 	/**
 	 *	Determines size of each sub-step in the simulation (ms).
 	 *	10 = +quality
 	 *	30 = +performance
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin=10.0f, ClampMax=30.0f))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin=10.0f, ClampMax=30.0f))
 	float SimFrequency = 10.0f;
 	
 	// Maximum simulation time for the virtual projectile.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float MaxSimTime = 3.f;
 	
 	// The acceleration of the gravity
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float Gravity = 980.7f;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool ShowTraceDebug = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+    float Gravity = -980.7f;
 };
 
 /**
@@ -87,7 +90,7 @@ class AShooterWeapon_Grenade : public AShooterWeapon
 	TSubclassOf<class AGrenade> GrenadeClassToSpawn;
 	
 	/** weapon config */
-	UPROPERTY(EditDefaultsOnly, Category=Config)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Config)
 	FGrenadeTrajectoryData TrajectoryConfig;
 
 	virtual void Destroyed() override;
@@ -135,9 +138,6 @@ private:
 	UPROPERTY()
 	bool bCanShoot = false;
 	
-	UPROPERTY()
-	float DelayRecalculateTrajectory = .1f;
-
 	UPROPERTY()
 	FTimerHandle RecalculateTrajectoryHandle;
 	
