@@ -5,6 +5,8 @@
 #include "ShooterWeapon.h"
 #include "ShooterWeapon_Grenade.generated.h"
 
+class AGrenade;
+
 /*
  * We could avoid having this enum with the conversion to EAmmoType in the GetAmmoType function, but this way we avoid
  * possible problems with editor modifications, avoiding setting any Bullet ammo type to any grenade
@@ -78,6 +80,11 @@ struct FGrenadeWeaponData
 	}
 };
 
+/**
+ * This class represents the grenade while holding it
+ * Should have only "weapon" related things and the trajectory
+ * All grenade effects like what happens when the grenade explodes, should go in the AGrenade class 
+ */
 UCLASS(Abstract, Blueprintable)
 class AShooterWeapon_Grenade : public AShooterWeapon
 {
@@ -90,6 +97,9 @@ class AShooterWeapon_Grenade : public AShooterWeapon
 		return EAmmoType::EMax;
 	}
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AGrenade> GrenadeClassToSpawn;
+	
 	/** weapon config */
 	UPROPERTY(EditDefaultsOnly, Category=Config)
 	FGrenadeWeaponData GrenadeConfig;

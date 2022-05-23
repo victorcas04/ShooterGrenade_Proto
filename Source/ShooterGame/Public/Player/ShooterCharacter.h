@@ -3,6 +3,7 @@
 #pragma once
 
 #include "ShooterTypes.h"
+#include "ShooterWeapon.h"
 #include "ShooterCharacter.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnShooterCharacterEquipWeapon, AShooterCharacter*, AShooterWeapon* /* new */);
@@ -89,6 +90,9 @@ class AShooterCharacter : public ACharacter
 	*/
 	void EquipWeapon(class AShooterWeapon* Weapon);
 
+	UFUNCTION()
+	static void EquipWeapon_Static(AActor* TargetActor, AShooterWeapon* Weapon);
+	
 	//////////////////////////////////////////////////////////////////////////
 	// Weapon usage
 
@@ -216,6 +220,9 @@ class AShooterCharacter : public ACharacter
 	/** get mesh component */
 	USkeletalMeshComponent* GetPawnMesh() const;
 
+	UFUNCTION()
+	static AShooterWeapon* GetWeapon_Static(AActor* TargetActor);
+	
 	/** get currently equipped weapon */
 	UFUNCTION(BlueprintCallable, Category = "Game|Weapon")
 	class AShooterWeapon* GetWeapon() const;

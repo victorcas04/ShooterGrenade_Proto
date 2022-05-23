@@ -20,7 +20,10 @@ public:
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	bool IsGrenadeEquipped() { return IsValid(CurrentEquippedGrenade); }
+	bool IsGrenadeEquipped();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	AShooterWeapon_Grenade* GetGrenadeEquippedOrNull();
 	
 	UFUNCTION()
 	void HoldGrenadeButton();
@@ -32,7 +35,7 @@ public:
 	float TimeHoldToEquipWeapon = 1.5f;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Grenades")
-	TArray<TSubclassOf<class AShooterWeapon_Grenade>> ArrayGrenades;
+	TArray<TSubclassOf<class AShooterWeapon_Grenade>> ArrayGrenadeClasses;
 
 	UFUNCTION(BlueprintCallable)
 	void CancelCurrentThrow();
@@ -41,14 +44,13 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere)
-	class AShooterWeapon_Grenade* CurrentEquippedGrenade;
-
 private:
 
 	void EquipWeapon();
 	void EquipNextGrenade();
-	
+	AShooterWeapon_Grenade* SpawnGrenadeWeaponOfClass(TSubclassOf<class AShooterWeapon_Grenade> GrenadeClass);
+
+	AShooterWeapon* PreviousWeapon_Cached;
 	FTimerHandle HoldToEquipWeaponHandle;
 	
 };

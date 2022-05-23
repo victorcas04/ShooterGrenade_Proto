@@ -19,30 +19,91 @@ void UGrenadeManagerComp::TickComponent(float DeltaTime, ELevelTick TickType,
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
+bool UGrenadeManagerComp::IsGrenadeEquipped()
+{
+	return IsValid(GetGrenadeEquippedOrNull());
+}
+
+AShooterWeapon_Grenade* UGrenadeManagerComp::GetGrenadeEquippedOrNull()
+{
+	AShooterWeapon* Weapon = AShooterCharacter::GetWeapon_Static(GetOwner());
+	if(!IsValid(Weapon)) return nullptr;
+	return Cast<AShooterWeapon_Grenade>(Weapon);
+}
+
 void UGrenadeManagerComp::CancelCurrentThrow()
 {
-	if(!IsValid(CurrentEquippedGrenade)) return;
-	CurrentEquippedGrenade->OnHoldCancel();
+	AShooterWeapon_Grenade* Grenade = GetGrenadeEquippedOrNull();
+	if(!IsValid(Grenade)) return;
+	Grenade->OnHoldCancel();
 }
 
 void UGrenadeManagerComp::EquipWeapon()
 {
-	// CAS TODO:
-	// call equip net weapon function
-	// make equipped grenade null
+	if(!IsValid(PreviousWeapon_Cached)) return;
 	
+	AShooterWeapon_Grenade* PreviousGrenade_Cached = GetGrenadeEquippedOrNull();
+
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Cyan, "Equip weapon");
+	AShooterCharacter::EquipWeapon_Static(GetOwner(), PreviousWeapon_Cached);
+
+	if(IsValid(PreviousGrenade_Cached))
+	{
+		PreviousGrenade_Cached->Destroy();
+	}
 }
 
 void UGrenadeManagerComp::EquipNextGrenade()
 {
-	// CAS TODO:
-	// if !equipped grenade -> equip first grenade
-	// else
-	// cycle through grenade array
-	//AShooterWeapon* NewWeapon = GetWorld()->SpawnActor<AShooterWeapon>(DefaultInventoryClasses[i], SpawnInfo);
+	if(ArrayGrenadeClasses.Num() <= 0) return;
+	AShooterWeapon_Grenade* GrenadeToEquip = nullptr;
+	AShooterWeapon_Grenade* PreviousGrenade_Cached = nullptr;
 	
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Cyan, "Equip grenade");
+	if(!IsGrenadeEquipped())
+	{
+		for(const auto G: ArrayGrenadeClasses)
+		{
+			GrenadeToEquip = SpawnGrenadeWeaponOfClass(G);
+			if(IsValid(GrenadeToEquip))
+			{
+				PreviousWeapon_Cached = AShooterCharacter::GetWeapon_Static(GetOwner());
+				break;
+			}
+		}
+	}
+	else
+	{
+		if(ArrayGrenadeClasses.Num() == 1) return;
+		PreviousGrenade_Cached = GetGrenadeEquippedOrNull();
+		
+		const TSubclassOf<class AShooterWeapon_Grenade> EquippedGrenadeClass = GetGrenadeEquippedOrNull()->GetClass();
+		const int StartPos = ArrayGrenadeClasses.IndexOfByKey(EquippedGrenadeClass);
+		for(int i = StartPos + 1; ArrayGrenadeClasses[i] != EquippedGrenadeClass;)
+		{
+			if(i >= ArrayGrenadeClasses.Num()) i = 0;
+			GrenadeToEquip = SpawnGrenadeWeaponOfClass(ArrayGrenadeClasses[i]);
+			if(IsValid(GrenadeToEquip)) break;
+			++i;
+		}
+	}
+	if(IsValid(GrenadeToEquip))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Cyan, "Equip grenade");
+		AShooterCharacter::EquipWeapon_Static(GetOwner(), GrenadeToEquip);
+
+		if(IsValid(PreviousGrenade_Cached))
+		{
+			PreviousGrenade_Cached->Destroy();
+		}
+	}
+}
+
+AShooterWeapon_Grenade* UGrenadeManagerComp::SpawnGrenadeWeaponOfClass(TSubclassOf<AShooterWeapon_Grenade> GrenadeClass)
+{
+	if(!IsValid(GrenadeClass)) return nullptr;
+	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	return GetWorld()->SpawnActor<AShooterWeapon_Grenade>(GrenadeClass, SpawnInfo);
 }
 
 void UGrenadeManagerComp::HoldGrenadeButton()

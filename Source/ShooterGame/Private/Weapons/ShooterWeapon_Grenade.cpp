@@ -2,6 +2,8 @@
 
 #include "Weapons/ShooterWeapon_Grenade.h"
 
+#include "Grenade.h"
+
 AShooterWeapon_Grenade::AShooterWeapon_Grenade(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) { }
 
 void AShooterWeapon_Grenade::Destroyed()
@@ -38,6 +40,15 @@ void AShooterWeapon_Grenade::ReloadWeapon()
 
 void AShooterWeapon_Grenade::FireWeapon()
 {
+	// CAS TODO:
+	// add trajectory parameter and make grenade follow it
+	if(IsValid(GrenadeClassToSpawn))
+	{
+		FActorSpawnParameters SpawnInfo;
+		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		AGrenade* Grenade = GetWorld()->SpawnActor<AGrenade>(GrenadeClassToSpawn, SpawnInfo);
+	}
+	
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Cyan, "Spawn grenade with trajectory parameter");
 }
 

@@ -650,6 +650,17 @@ void AShooterCharacter::EquipWeapon(AShooterWeapon* Weapon)
 	}
 }
 
+void AShooterCharacter::EquipWeapon_Static(AActor* TargetActor, AShooterWeapon* Weapon)
+{
+	if(IsValid(TargetActor))
+	{
+		if(AShooterCharacter* TargetAsSChar = Cast<AShooterCharacter>(TargetActor))
+		{
+			TargetAsSChar->EquipWeapon(Weapon);
+		}
+	}
+}
+
 bool AShooterCharacter::ServerEquipWeapon_Validate(AShooterWeapon* Weapon)
 {
 	return true;
@@ -1284,6 +1295,18 @@ bool AShooterCharacter::IsReplicationPausedForConnection(const FNetViewer& Conne
 void AShooterCharacter::OnReplicationPausedChanged(bool bIsReplicationPaused)
 {
 	GetMesh()->SetHiddenInGame(bIsReplicationPaused, true);
+}
+
+AShooterWeapon* AShooterCharacter::GetWeapon_Static(AActor* TargetActor)
+{
+	if(IsValid(TargetActor))
+	{
+		if(const AShooterCharacter* TargetAsSChar = Cast<AShooterCharacter>(TargetActor))
+		{
+			return TargetAsSChar->GetWeapon();
+		}
+	}
+	return nullptr;
 }
 
 AShooterWeapon* AShooterCharacter::GetWeapon() const
