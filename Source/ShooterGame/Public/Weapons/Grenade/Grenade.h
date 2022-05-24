@@ -54,7 +54,7 @@ public:
 	void Init(FVector NewImpulseVector, APawn* NewOwner);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	USkeletalMeshComponent* GrenadeMesh;
+	UStaticMeshComponent* GrenadeMesh;
 
 	/** grenade config */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Config)
