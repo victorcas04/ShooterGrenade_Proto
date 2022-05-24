@@ -2,9 +2,62 @@
 
 #include "Grenade/GrenadeManagerComp.h"
 
+#include "GrenadeTestHelpers.h"
+
 UGrenadeManagerComp::UGrenadeManagerComp()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+}
+
+FVector UGrenadeManagerComp::GetImpulseVector(AActor* TargetActor)
+{
+	FVector ImpulseVector = FVector::ZeroVector;
+
+	if(!IsValid(TargetActor)) return ImpulseVector;
+	
+	GTestEObjectIsValid ValidComp;
+	const auto ActorComp = GrenadeTestHelpers::GetValidatedComponentByClass(
+		TargetActor, UGrenadeManagerComp::StaticClass(), ValidComp);
+	if(ValidComp == GTestEObjectIsValid::NotValid) return ImpulseVector;
+	
+	if(!IsValid(Cast<UGrenadeManagerComp>(ActorComp)->GetGrenadeEquippedOrNull())) return ImpulseVector;
+	
+	const APawn* PawnOwner = Cast<APawn>(TargetActor);
+	if(!IsValid(PawnOwner)) return ImpulseVector;
+
+	const APlayerController* PlayerController = Cast<APlayerController>(PawnOwner->GetController());
+	if (!IsValid(PlayerController)) return ImpulseVector;
+
+	const APlayerCameraManager* PlayerCameraManager = PlayerController->PlayerCameraManager;
+
+	ImpulseVector = PlayerCameraManager->GetActorForwardVector();
+	ImpulseVector.Normalize();
+	ImpulseVector *= Cast<UGrenadeManagerComp>(ActorComp)->GetGrenadeEquippedOrNull()->TrajectoryData.ThrowForce;
+
+	return ImpulseVector;
+}
+
+FTransform UGrenadeManagerComp::GetGrenadeSpawnTransformPoint(AActor* TargetActor)
+{
+	FTransform SpawnTransform = FTransform::Identity;
+
+	if(!IsValid(TargetActor)) return SpawnTransform;
+	
+	GTestEObjectIsValid ValidManagerComp;
+	const auto ActorManagerComp = GrenadeTestHelpers::GetValidatedComponentByClass(
+		TargetActor, UGrenadeManagerComp::StaticClass(), ValidManagerComp);
+	if(ValidManagerComp == GTestEObjectIsValid::NotValid) return SpawnTransform;
+
+	GTestEObjectIsValid ValidComp;
+	const auto ActorComp = GrenadeTestHelpers::GetValidatedComponentByClassWithTag(
+		TargetActor, UActorComponent::StaticClass(),
+		Cast<UGrenadeManagerComp>(ActorManagerComp)->TagComponentSpawnPoint, ValidComp);
+	if(ValidComp == GTestEObjectIsValid::NotValid) return SpawnTransform;
+
+	const USceneComponent* SceneComp = Cast<USceneComponent>(ActorComp);
+	if(!IsValid(SceneComp)) return SpawnTransform;
+	
+	return SceneComp->GetComponentTransform();
 }
 
 void UGrenadeManagerComp::BeginPlay()

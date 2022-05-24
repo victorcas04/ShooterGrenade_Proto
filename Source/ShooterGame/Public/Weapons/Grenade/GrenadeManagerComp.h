@@ -31,14 +31,26 @@ public:
 	UFUNCTION()
 	void ReleaseGrenadeButton();
 
-	UPROPERTY(EditDefaultsOnly, Category="Hold Grenade Input")
+	UPROPERTY(EditDefaultsOnly, Category="Grenade Manager")
+	FName TagComponentSpawnPoint = "SpawnPoint";
+	
+	UPROPERTY(EditDefaultsOnly, Category="Grenade Manager")
 	float TimeHoldToEquipWeapon = 1.5f;
 	
-	UPROPERTY(EditDefaultsOnly, Category="Grenades")
+	UPROPERTY(EditDefaultsOnly, Category="Grenade Manager")
 	TArray<TSubclassOf<class AShooterWeapon_Grenade>> ArrayGrenadeClasses;
 
 	UFUNCTION(BlueprintCallable)
 	void CancelCurrentThrow();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowTrajectory(bool bShow);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	static FVector GetImpulseVector(AActor* TargetActor);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	static FTransform GetGrenadeSpawnTransformPoint(AActor* TargetActor);
 	
 protected:
 	// Called when the game starts
@@ -49,8 +61,10 @@ private:
 	void EquipWeapon();
 	void EquipNextGrenade();
 	AShooterWeapon_Grenade* SpawnGrenadeWeaponOfClass(TSubclassOf<class AShooterWeapon_Grenade> GrenadeClass);
-
-	AShooterWeapon* PreviousWeapon_Cached;
+	
 	FTimerHandle HoldToEquipWeaponHandle;
+	
+	UPROPERTY()
+	AShooterWeapon* PreviousWeapon_Cached;
 	
 };

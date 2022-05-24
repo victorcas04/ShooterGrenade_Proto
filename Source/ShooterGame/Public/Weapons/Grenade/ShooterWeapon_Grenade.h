@@ -5,43 +5,21 @@
 #include "ShooterWeapon.h"
 #include "ShooterWeapon_Grenade.generated.h"
 
-class AGrenade;
-
-/*
- * We could avoid having this enum with the conversion to EAmmoType in the GetAmmoType function, but this way we avoid
- * possible problems with editor modifications, avoiding setting any Bullet ammo type to any grenade
- */
-UENUM()
-enum class EGrenadeType
-{
-	EBouncing,
-	ESticky,
-	EMax,
-};
-
 USTRUCT(BlueprintType)
 struct FGrenadeTrajectoryData
 {
 	GENERATED_USTRUCT_BODY()
-
-	/** base grenade type */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	EGrenadeType GrenadeType = EGrenadeType::EBouncing;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin=1.0f, ClampMax=1000.0f))
 	float ThrowForce = 1000.0f;
 	
-	// Projectile radius, used when tracing for collision. If <= 0, a line trace is used instead.
+	// Projectile radius, used when tracing for collision.
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin=1.0f, ClampMax=100.0f))
 	float ProjectileRadius = 10.0f;
 
-	// Object type to use, when checking collisions.
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes = TArray<TEnumAsByte<EObjectTypeQuery>>({
-		UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldStatic),
-		UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic),
-		UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn)
-	});
+	// Trace channel to use when checking collisions.
+	// ECC_GameTraceChannel2 == Projectile
+	ECollisionChannel TrajectoryChannel = ECollisionChannel::ECC_GameTraceChannel2;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<AActor*> ActorsToIgnore;
@@ -79,19 +57,14 @@ class AShooterWeapon_Grenade : public AShooterWeapon
 {
 	GENERATED_UCLASS_BODY()
 	
-	virtual EAmmoType GetAmmoType() const override
-	{
-		if(TrajectoryConfig.GrenadeType == EGrenadeType::EBouncing) return EAmmoType::EBouncingGrenade;
-		if(TrajectoryConfig.GrenadeType == EGrenadeType::ESticky) return EAmmoType::EStickyGrenade;
-		return EAmmoType::EMax;
-	}
+	virtual EAmmoType GetAmmoType() const override;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AGrenade> GrenadeClassToSpawn;
 	
-	/** weapon config */
+	/** trajectory config */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Config)
-	FGrenadeTrajectoryData TrajectoryConfig;
+	FGrenadeTrajectoryData TrajectoryData;
 
 	virtual void Destroyed() override;
 
@@ -131,9 +104,6 @@ protected:
 	virtual void OnBurstFinished() override;
 
 private:
-
-	// CAS TODO:
-	// trajectory var
 
 	UPROPERTY()
 	bool bCanShoot = false;

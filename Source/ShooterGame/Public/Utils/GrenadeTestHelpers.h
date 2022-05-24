@@ -18,5 +18,13 @@ public:
 	static UActorComponent* GetValidatedComponentByClass(AActor* Target,
 	                                                     TSubclassOf<UActorComponent> ComponentClass,
 	                                                     GTestEObjectIsValid& OutResult);
+
+	/** Searches components array and returns first encountered component of the specified class. */
+	UFUNCTION(BlueprintCallable, Category = "Actor", meta = (ComponentClass = "ActorComponent", DeterminesOutputType =
+		"ComponentClass", ExpandEnumAsExecs = "OutResult"))
+	static UActorComponent* GetValidatedComponentByClassWithTag(AActor* Target,
+														 TSubclassOf<UActorComponent> ComponentClass,
+														 FName Tag,
+														 GTestEObjectIsValid& OutResult);
 	
 };
