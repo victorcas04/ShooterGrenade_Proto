@@ -27,14 +27,13 @@ struct FGrenadeData
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EGrenadeType GrenadeType = EGrenadeType::EBouncing;
 
+	/** Setting this time to 0 means it will not explode automatically after a delay (useful for mines or similar grenades) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float ExplosionDelay = 3.0f;
-	
+
+	/** Setting this time to 0 means the grenade will never be destroyed after explosion (useful for flares or similar grenades) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	float ExplosionRadius = 500.0f;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	float ExplosionDamage = 50.0f;
+	float DestroyGrenadeAfterExplosionDelay = .01f;
 };
 
 /**
@@ -56,9 +55,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* GrenadeMesh;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AGrenadeExplosion> GrenadeExplosionClassToSpawn;
+	
 	/** grenade config */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Config)
 	FGrenadeData GrenadeData;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ExplodeGrenade_BP();
 	
 	virtual void Tick(float DeltaTime) override;
 	
@@ -68,6 +73,18 @@ protected:
 private:
 	FVector ImpulseVector = FVector::ZeroVector;
 
+	FTimerHandle DelayGrenadeExplosionHandle;
+	FTimerHandle DelayDestroyGrenadeHandle;
+
+	UFUNCTION()
+	void SpawnGrenadeExplosion();
+	
+	UFUNCTION()
+	void ExplodeGrenade();
+
+	UFUNCTION()
+	void DestroyGrenade();
+	
 	UPROPERTY()
 	APawn* PawnOwner;
 };

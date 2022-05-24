@@ -40,17 +40,17 @@ void AShooterWeapon_Grenade::StopFire()
 
 void AShooterWeapon_Grenade::StartReload(bool bFromReplication)
 {
-	// CAS TODO:
+	// CAS TODO: start reload
 }
 
 void AShooterWeapon_Grenade::StopReload()
 {
-	// CAS TODO:
+	// CAS TODO: stop reload
 }
 
 void AShooterWeapon_Grenade::ReloadWeapon()
 {
-	// CAS TODO:
+	// CAS TODO: reload action
 }
 
 void AShooterWeapon_Grenade::FireWeapon()
@@ -75,12 +75,12 @@ void AShooterWeapon_Grenade::FireWeapon()
 
 void AShooterWeapon_Grenade::OnBurstStarted()
 {
-	// CAS TODO:
+	// CAS TODO: burst start
 }
 
 void AShooterWeapon_Grenade::OnBurstFinished()
 {
-	// CAS TODO:
+	// CAS TODO: burst finish
 	Super::OnBurstFinished();
 }
 
