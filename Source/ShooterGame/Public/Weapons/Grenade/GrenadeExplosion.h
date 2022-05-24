@@ -16,6 +16,8 @@ enum class EGrenadeDamageType
 USTRUCT(BlueprintType)
 struct FGrenadeExplosionData
 {
+	GENERATED_USTRUCT_BODY()
+
 	/** Base damage type */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EGrenadeDamageType GrenadeDamageType = EGrenadeDamageType::ENormal;
