@@ -1,10 +1,10 @@
 # ShooterGrenade_Proto
 
-[Run the project](Run-the-project)
-[Input mapping](Input-mapping)
-[Actors, components and system configuration](Actors-,-components-and-system-configuration)
-[Problems encountered](Problems-encountered)
-[Things to improve](Things-to-improve)
+ - [Run the project](Run-the-project)
+ - [Input mapping](Input-mapping)
+ - [Actors, components and system configuration](Actors-,-components-and-system-configuration)
+ - [Problems encountered](Problems-encountered)
+ - [Things to improve](Things-to-improve)
 
 ## Run the project
  1.- Double click on the `ShooterGrenade_Proto.uproject` file.
