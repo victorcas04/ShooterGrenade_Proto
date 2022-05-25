@@ -60,6 +60,12 @@ FTransform UGrenadeManagerComp::GetGrenadeSpawnTransformPoint(AActor* TargetActo
 	return SceneComp->GetComponentTransform();
 }
 
+void UGrenadeManagerComp::ReduceGrenadeAmmo(TSubclassOf<AShooterWeapon_Grenade> GrenadeClass, int AmmoUsed)
+{
+	if(!MapGrenadeAmmo.Contains(GrenadeClass)) return;
+	MapGrenadeAmmo.Add(GrenadeClass, (*MapGrenadeAmmo.Find(GrenadeClass)) - AmmoUsed);
+}
+
 void UGrenadeManagerComp::BeginPlay()
 {
 	Super::BeginPlay();
@@ -94,6 +100,11 @@ void UGrenadeManagerComp::CancelCurrentThrow()
 void UGrenadeManagerComp::ShowTrajectory(bool bShow)
 {
 	if(!bCanShowTrajectory) return;
+	
+	AShooterWeapon_Grenade* Grenade = GetGrenadeEquippedOrNull();
+	if(!IsValid(Grenade)) return;
+	if(!Grenade->CanThrowGrenade()) return;
+	
 	ShowTrajectory_BP(bShow);
 }
 
@@ -108,6 +119,8 @@ void UGrenadeManagerComp::EquipWeapon()
 
 	if(IsValid(PreviousGrenade_Cached))
 	{
+		MapGrenadeAmmo.Add(PreviousGrenade_Cached->GetClass(), PreviousGrenade_Cached->GetCurrentAmmo());
+		
 		PreviousGrenade_Cached->Destroy();
 	}
 }
@@ -149,10 +162,22 @@ void UGrenadeManagerComp::EquipNextGrenade()
 	if(IsValid(GrenadeToEquip))
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Cyan, "Equip grenade");
-		AShooterCharacter::EquipWeapon_Static(GetOwner(), GrenadeToEquip);
 
+		if(MapGrenadeAmmo.Contains(GrenadeToEquip->GetClass()))
+		{
+			GrenadeToEquip->GiveAmmo((*MapGrenadeAmmo.Find(GrenadeToEquip->GetClass())) - GrenadeToEquip->WeaponConfig.MaxAmmo);
+		}
+		else
+		{
+			MapGrenadeAmmo.Add(GrenadeToEquip->GetClass(), GrenadeToEquip->WeaponConfig.MaxAmmo);
+		}
+		
+		AShooterCharacter::EquipWeapon_Static(GetOwner(), GrenadeToEquip);
+		
 		if(IsValid(PreviousGrenade_Cached))
 		{
+			MapGrenadeAmmo.Add(PreviousGrenade_Cached->GetClass(), PreviousGrenade_Cached->GetCurrentAmmo());
+			
 			PreviousGrenade_Cached->Destroy();
 		}
 	}

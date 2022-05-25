@@ -631,7 +631,6 @@ AShooterWeapon* AShooterCharacter::FindWeapon(TSubclassOf<AShooterWeapon> Weapon
 			return Inventory[i];
 		}
 	}
-
 	return NULL;
 }
 

@@ -39,7 +39,7 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, Category="Grenade Manager")
 	TArray<TSubclassOf<class AShooterWeapon_Grenade>> ArrayGrenadeClasses;
-
+	
 	UFUNCTION(BlueprintCallable)
 	void CancelCurrentThrow();
 
@@ -57,6 +57,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	static FTransform GetGrenadeSpawnTransformPoint(AActor* TargetActor);
+
+	UFUNCTION()
+	void ReduceGrenadeAmmo(TSubclassOf<AShooterWeapon_Grenade> GrenadeClass, int AmmoUsed);
 	
 protected:
 	// Called when the game starts
@@ -64,6 +67,9 @@ protected:
 
 private:
 
+	UPROPERTY()
+	TMap<TSubclassOf<class AShooterWeapon_Grenade>, int> MapGrenadeAmmo;
+	
 	void EquipWeapon();
 	void EquipNextGrenade();
 	AShooterWeapon_Grenade* SpawnGrenadeWeaponOfClass(TSubclassOf<class AShooterWeapon_Grenade> GrenadeClass);

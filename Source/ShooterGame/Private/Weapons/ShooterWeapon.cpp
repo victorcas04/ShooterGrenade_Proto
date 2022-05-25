@@ -345,6 +345,11 @@ bool AShooterWeapon::CanFire() const
 	return (( bCanFire == true ) && ( bStateOKToFire == true ) && ( bPendingReload == false ));
 }
 
+bool AShooterWeapon::HasAmmo() const
+{
+	return CurrentAmmoInClip > 0 || HasInfiniteClip() || HasInfiniteAmmo();
+}
+
 bool AShooterWeapon::CanReload() const
 {
 	bool bCanReload = (!MyPawn || MyPawn->CanReload());
@@ -436,7 +441,7 @@ void AShooterWeapon::HandleReFiring()
 
 void AShooterWeapon::HandleFiring()
 {
-	if ((CurrentAmmoInClip > 0 || HasInfiniteClip() || HasInfiniteAmmo()) && CanFire())
+	if (HasAmmo() && CanFire())
 	{
 		if (GetNetMode() != NM_DedicatedServer)
 		{

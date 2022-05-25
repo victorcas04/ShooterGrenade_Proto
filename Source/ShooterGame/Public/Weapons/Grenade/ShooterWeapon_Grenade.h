@@ -77,17 +77,11 @@ class AShooterWeapon_Grenade : public AShooterWeapon
 	/** [local + server] stop weapon fire */
 	virtual void StopFire() override;
 	
-	/** [all] start weapon reload */
-	virtual void StartReload(bool bFromReplication = false) override;
-
-	/** [local + server] interrupt weapon reload */
-	virtual void StopReload() override;
-
-	/** [server] performs actual reload */
-	virtual void ReloadWeapon() override;
-	
 	UFUNCTION()
 	void OnHoldCancel();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool CanThrowGrenade() const;
 	
 protected:
 
@@ -96,12 +90,6 @@ protected:
 	
 	/** [local] weapon specific fire implementation */
 	virtual void FireWeapon() override;
-	
-	/** [local + server] firing started */
-	virtual void OnBurstStarted() override;
-
-	/** [local + server] firing finished */
-	virtual void OnBurstFinished() override;
 
 private:
 

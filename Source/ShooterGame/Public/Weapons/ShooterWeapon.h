@@ -178,6 +178,9 @@ class AShooterWeapon : public AActor
 	/** check if weapon can fire */
 	bool CanFire() const;
 
+	/** check if weapon has enough ammo to shoot */
+	bool HasAmmo() const;
+	
 	/** check if weapon can be reloaded */
 	bool CanReload() const;
 
@@ -282,15 +285,15 @@ class AShooterWeapon : public AActor
 	/** gets the duration of equipping weapon*/
 	float GetEquipDuration() const;
 
+	/** weapon data */
+	UPROPERTY(EditDefaultsOnly, Category=Config)
+	FWeaponData WeaponConfig;
+	
 protected:
 
 	/** pawn owner */
 	UPROPERTY(Transient, ReplicatedUsing=OnRep_MyPawn)
 	class AShooterCharacter* MyPawn;
-
-	/** weapon data */
-	UPROPERTY(EditDefaultsOnly, Category=Config)
-	FWeaponData WeaponConfig;
 
 private:
 	/** weapon mesh: 1st person view */

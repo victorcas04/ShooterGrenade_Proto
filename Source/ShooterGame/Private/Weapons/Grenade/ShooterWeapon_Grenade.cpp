@@ -29,21 +29,6 @@ void AShooterWeapon_Grenade::StopFire()
 	OnHoldRelease();
 }
 
-void AShooterWeapon_Grenade::StartReload(bool bFromReplication)
-{
-	// CAS TODO: start reload
-}
-
-void AShooterWeapon_Grenade::StopReload()
-{
-	// CAS TODO: stop reload
-}
-
-void AShooterWeapon_Grenade::ReloadWeapon()
-{
-	// CAS TODO: reload action
-}
-
 void AShooterWeapon_Grenade::FireWeapon()
 {
 	if(IsValid(GrenadeClassToSpawn))
@@ -56,29 +41,16 @@ void AShooterWeapon_Grenade::FireWeapon()
 		if(!IsValid(Grenade)) return;
 		Grenade->Init(UGrenadeManagerComp::GetImpulseVector(GetPawnOwner()), GetPawnOwner());
 		UGameplayStatics::FinishSpawningActor(Grenade, SpawnTransform);
-		
-		// CAS TODO: remove uses
-		
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Cyan, "Spawn grenade with trajectory parameter");
-	}
 	
-}
-
-void AShooterWeapon_Grenade::OnBurstStarted()
-{
-	// CAS TODO: burst start
-}
-
-void AShooterWeapon_Grenade::OnBurstFinished()
-{
-	// CAS TODO: burst finish
-	Super::OnBurstFinished();
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Cyan, "Spawn grenade");
+	}
 }
 
 void AShooterWeapon_Grenade::OnHoldStart()
 {
 	// TODO: Hold animation (must be looping)
-	
+
+	if(!CanThrowGrenade()) return;
 	if(!IsValid(GetPawnOwner()) ||
 		GetPawnOwner()->GetWorldTimerManager().IsTimerActive(RecalculateTrajectoryHandle)) return;
 
@@ -106,10 +78,21 @@ void AShooterWeapon_Grenade::OnHoldLoop()
 
 void AShooterWeapon_Grenade::OnHoldRelease()
 {
-		
 	// TODO: Throw grenade anim
+
+	int AmmoUsed = GetCurrentAmmo();
+	if(bCanShoot) HandleFiring();
+	AmmoUsed -= GetCurrentAmmo();
+
+	GTestEObjectIsValid ValidComp;
+	auto ActorComp = GrenadeTestHelpers::GetValidatedComponentByClass(
+		GetPawnOwner(), UGrenadeManagerComp::StaticClass(), ValidComp);
+		
+	if(ValidComp == GTestEObjectIsValid::Valid)
+	{
+		Cast<UGrenadeManagerComp>(ActorComp)->ReduceGrenadeAmmo(GetClass(), AmmoUsed);
+	}
 	
-	if(bCanShoot) FireWeapon();
 	OnHoldCancel();
 }
 
@@ -133,4 +116,9 @@ void AShooterWeapon_Grenade::OnHoldCancel()
 	{
 		Cast<UGrenadeManagerComp>(ActorComp)->ShowTrajectory(false);
 	}
+}
+
+bool AShooterWeapon_Grenade::CanThrowGrenade() const
+{
+	return HasAmmo() && CanFire();
 }
