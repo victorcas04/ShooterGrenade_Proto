@@ -2,7 +2,7 @@
 
  - [Run the project](#run-the-project)
  - [Input mapping](#input-mapping)
- - [Actors, components and system configuration](#actors-,-components-and-system-configuration)
+ - [Main architecture and system configuration](#main-architecture-and-system-configuration)
  - [Problems encountered](#problems-encountered)
  - [Things to improve](#things-to-improve)
 
@@ -24,7 +24,7 @@
  - **Cancel grenade throw** -> tap `Left Mouse Button` when grenade trajectory is shown
  - **Throw grenade** -> tap `Left Mouse Button` when grenade trajectory is shown and if it was not cancelled
 
-## Actors, components and system configuration
+## Main architecture and system configuration
 
 NOTE: all default actors, components and systems already given by unreal's sample are not mentioned here (like the `WeaponConfig` struct or similar)
 
