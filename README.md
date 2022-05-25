@@ -104,6 +104,9 @@ I also needed to make a utility file `GrenadeTestHelpers` for some functions:
 
 ## Things to improve
 
+ - Trajectory: the trajectory shown while holding the left click button can be improved to include the movement of the grenade after the first bounce. Also, it seems like it has a little bit of an offset, so needs more tunning.
+ - Grenade types: currently we have a basic grenade, that bounces and explodes after a while, but originally I wanted to create also a "sticky" grenade, so it would not bounce on walls for example. The architecture supports it and it's only a matter of creating a new type of grenade and add it to the inventory array, but didn't have time to implement that one.
+ - FX: the grenade does not spawn any effect or sound when exploding, but the functions where they should be implemented are exposed to blueprints, so any tech artist or designer can do that.
 
 ## Timeline
 
