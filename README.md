@@ -1,11 +1,21 @@
-# ShooterGrenade_Proto
+# ShooterGrenade_Proto : Add Frag Grenade to the existing Shooter Game Sample from UE4
 
+ - [Prototype requisites](#prototype-requisites)
  - [Run the project](#run-the-project)
  - [Input mapping](#input-mapping)
  - [Main architecture and system configuration](#main-architecture-and-system-configuration)
  - [Problems encountered](#problems-encountered)
  - [Things to improve](#things-to-improve)
  - [Timeline](#timeline)
+
+## Prototype requisites
+
+ - User Windows 10
+ - Latest UE4 version (4.27)
+ - When a key is pressed, a Grenade is thrown(No Animation is needed)
+ - No need to create a UI (A key press to trigger the action is fine)
+ - Upon explosion, the grenade will damage characters around the explosion
+ - A detailed, descriptive ReadMe/Document
 
 ## Run the project
  1. Double click on the `ShooterGrenade_Proto.uproject` file.
