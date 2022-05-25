@@ -34,7 +34,7 @@ void AGrenade::BeginPlay()
 
 	if(GrenadeData.ExplosionDelay > 0.0f)
 	{
-		PawnOwner->GetWorldTimerManager().SetTimer(DelayGrenadeExplosionHandle, this,
+		GetWorldTimerManager().SetTimer(DelayGrenadeExplosionHandle, this,
 			&AGrenade::ExplodeGrenade,
 			GrenadeData.ExplosionDelay, false);
 	}
@@ -49,7 +49,7 @@ void AGrenade::SpawnGrenadeExplosion()
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn, PawnOwner));
 
 	if(!IsValid(GrenadeExplosion)) return;
-	GrenadeExplosion->Init(PawnOwner);
+	GrenadeExplosion->Init(PawnOwner, this);
 	UGameplayStatics::FinishSpawningActor(GrenadeExplosion, GetActorTransform());
 	
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Cyan, "Spawn grenade explosion");
@@ -58,9 +58,9 @@ void AGrenade::SpawnGrenadeExplosion()
 
 void AGrenade::ExplodeGrenade()
 {
-	if(PawnOwner->GetWorldTimerManager().IsTimerActive(DelayGrenadeExplosionHandle))
+	if(GetWorldTimerManager().IsTimerActive(DelayGrenadeExplosionHandle))
 	{
-		PawnOwner->GetWorldTimerManager().ClearTimer(DelayGrenadeExplosionHandle);
+		GetWorldTimerManager().ClearTimer(DelayGrenadeExplosionHandle);
 	}
 	ExplodeGrenade_BP();
 
@@ -68,7 +68,7 @@ void AGrenade::ExplodeGrenade()
 	
 	if(GrenadeData.DestroyGrenadeAfterExplosionDelay > 0.0f)
 	{
-		PawnOwner->GetWorldTimerManager().SetTimer(DelayDestroyGrenadeHandle, this,
+		GetWorldTimerManager().SetTimer(DelayDestroyGrenadeHandle, this,
 			&AGrenade::DestroyGrenade,
 			GrenadeData.DestroyGrenadeAfterExplosionDelay, false);
 	}
@@ -76,9 +76,9 @@ void AGrenade::ExplodeGrenade()
 
 void AGrenade::DestroyGrenade()
 {
-	if(PawnOwner->GetWorldTimerManager().IsTimerActive(DelayDestroyGrenadeHandle))
+	if(GetWorldTimerManager().IsTimerActive(DelayDestroyGrenadeHandle))
 	{
-		PawnOwner->GetWorldTimerManager().ClearTimer(DelayDestroyGrenadeHandle);
+		GetWorldTimerManager().ClearTimer(DelayDestroyGrenadeHandle);
 	}
 	Destroy();
 }

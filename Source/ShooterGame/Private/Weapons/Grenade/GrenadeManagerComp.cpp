@@ -91,6 +91,12 @@ void UGrenadeManagerComp::CancelCurrentThrow()
 	Grenade->OnHoldCancel();
 }
 
+void UGrenadeManagerComp::ShowTrajectory(bool bShow)
+{
+	if(!bCanShowTrajectory) return;
+	ShowTrajectory_BP(bShow);
+}
+
 void UGrenadeManagerComp::EquipWeapon()
 {
 	if(!IsValid(PreviousWeapon_Cached)) return;

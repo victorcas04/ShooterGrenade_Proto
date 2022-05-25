@@ -27,4 +27,8 @@ public:
 														 FName Tag,
 														 GTestEObjectIsValid& OutResult);
 	
+	// ECC_GameTraceChannel2 == Projectile
+	UFUNCTION(BlueprintCallable, Category = "Trace")
+	static bool ExistsWallBetweenActors(AActor* OriginActor, AActor* TargetActor, ECollisionChannel TraceChannelToCheck = ECollisionChannel::ECC_EngineTraceChannel2);
+	
 };

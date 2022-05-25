@@ -9,16 +9,7 @@ AShooterWeapon_Grenade::AShooterWeapon_Grenade(const FObjectInitializer& ObjectI
 
 EAmmoType AShooterWeapon_Grenade::GetAmmoType() const
 {
-	{
-		const EGrenadeType GType = GrenadeClassToSpawn.GetDefaultObject()->GrenadeData.GrenadeType;
-		switch (GType)
-		{
-		case EGrenadeType::EBouncing: return EAmmoType::EBouncingGrenade;
-		case EGrenadeType::ESticky: return EAmmoType::EStickyGrenade;
-		default: ;
-		}
-		return EAmmoType::EMax;
-	}
+	return EAmmoType::EGrenade;
 }
 
 void AShooterWeapon_Grenade::Destroyed()

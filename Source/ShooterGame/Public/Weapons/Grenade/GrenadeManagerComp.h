@@ -43,9 +43,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CancelCurrentThrow();
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UPROPERTY(EditDefaultsOnly, Category="Grenade Manager")
+	bool bCanShowTrajectory = true;
+	
+	UFUNCTION()
 	void ShowTrajectory(bool bShow);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowTrajectory_BP(bool bShow);
+	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	static FVector GetImpulseVector(AActor* TargetActor);
 

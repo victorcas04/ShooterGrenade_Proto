@@ -48,3 +48,16 @@ UActorComponent* GrenadeTestHelpers::GetValidatedComponentByClassWithTag(
 	OutResult = GTestEObjectIsValid::Valid;
 	return Component;
 }
+
+bool GrenadeTestHelpers::ExistsWallBetweenActors(AActor* OriginActor, AActor* TargetActor, ECollisionChannel TraceChannelToCheck)
+{
+	if(!IsValid(OriginActor)) return false;
+	if(!IsValid(TargetActor)) return false;
+	
+	const TArray<AActor*>& ActorsToIgnore{OriginActor, TargetActor};
+
+	FHitResult HitResult;
+	return UKismetSystemLibrary::LineTraceSingle(OriginActor, OriginActor->GetActorLocation(), TargetActor->GetActorLocation(),
+		UEngineTypes::ConvertToTraceType(TraceChannelToCheck),
+		true, ActorsToIgnore, EDrawDebugTrace::None, HitResult, true);
+}

@@ -6,26 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "Grenade.generated.h"
 
-/*
- * We could avoid having this enum with the conversion to EAmmoType in the GetAmmoType function, but this way we avoid
- * possible problems with editor modifications, avoiding setting any Bullet ammo type to any grenade
- */
-UENUM()
-enum class EGrenadeType
-{
-	EBouncing,
-	ESticky,
-	EMax,
-};
-
 USTRUCT(BlueprintType)
 struct FGrenadeData
 {
 	GENERATED_USTRUCT_BODY()
-
-	/** Base grenade type */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	EGrenadeType GrenadeType = EGrenadeType::EBouncing;
 
 	/** Setting this time to 0 means it will not explode automatically after a delay (useful for mines or similar grenades) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -62,6 +46,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Config)
 	FGrenadeData GrenadeData;
 
+	/** This is here so other team members can add vfx/sfx on blueprint */
 	UFUNCTION(BlueprintImplementableEvent)
 	void ExplodeGrenade_BP();
 	

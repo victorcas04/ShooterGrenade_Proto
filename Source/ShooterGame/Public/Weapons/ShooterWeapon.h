@@ -95,8 +95,7 @@ enum class EAmmoType
 {
 	EBullet,
 	ERocket,
-	EBouncingGrenade,
-	EStickyGrenade,
+	EGrenade,
 	EMax,
 };
 
