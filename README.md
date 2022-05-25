@@ -101,6 +101,9 @@ I also needed to make a utility file `GrenadeTestHelpers` for some functions:
 
 ## Problems encountered
 
+ - Unreal sample - weapon system: I wanted to use as much as possible of the already implemented systems given by unreal, but I though they were gonna be more flexible than they really were, so I ended up doing my own system, leaving the already existing one only for "normal" weapons. It was faster than trying to redesign the whole system.
+ - Unreal sample - components: everything is on the character class in this sample. The first thing I was trying to do was to separate things into components or different actors, cause the original sample had everything in the main character class, and that made things harder cause there were a lot of coupling. I tried to make the new grenade system as decoupled as possible, but there were still some things I coudn't take out of there without making a big redesing work.
+ - Trajectory: the main idea was to show the full grenade trajectory, with its bounces and all, and the save that trajectory to a variable the actual thrown grenade would use and follow, but it was gonna be way more harder and longer to develop than this new approach with the AddImpulse, and I needed this time to implement the whole system of grenade cycling and make things a little bit smoother.
 
 ## Things to improve
 
