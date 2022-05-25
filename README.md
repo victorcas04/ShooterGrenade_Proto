@@ -5,6 +5,7 @@
  - [Main architecture and system configuration](#main-architecture-and-system-configuration)
  - [Problems encountered](#problems-encountered)
  - [Things to improve](#things-to-improve)
+ - [Timeline](#timeline)
 
 ## Run the project
  1. Double click on the `ShooterGrenade_Proto.uproject` file.
@@ -23,6 +24,10 @@
  - **Show grenade trajectory until first impact** -> hold `Left Mouse Button` when grenade is equipped
  - **Cancel grenade throw** -> tap `Left Mouse Button` when grenade trajectory is shown
  - **Throw grenade** -> tap `Left Mouse Button` when grenade trajectory is shown and if it was not cancelled
+
+#### Utils
+
+ - **Spawn a bot near you** -> press `'` or `º` to open the command line, then type `spawnbot` and hit `ENTER`
 
 ## Main architecture and system configuration
 
@@ -100,3 +105,34 @@ I also needed to make a utility file `GrenadeTestHelpers` for some functions:
 ## Things to improve
 
 
+## Timeline
+
+ - Tuesday 17 and Wednesday 18 : **Setup**
+   - Download sample project + setup git: 1h
+   - What to do brainstorm + some definitions: 1h
+   - Investigate unreal sample system + software design options: 4h
+
+ - Thursday 19 : **First architecture**
+   - Initial structure with base classes: 4h
+
+ - Friday 20 : **Arch improvements**
+   - Keep improving structure + add functionality: 4h
+
+ - Sunday 22 : **Arch improvements**
+   - Keep improving structure + add functionality: 4h
+
+ - Monday 23 : **Trajectory**
+   - Visual feedback + tune variables in editor: 2h
+   - Trajectory: 4h
+
+ - Tuesday 24 : **Finish Trajectory + Explosion**
+   - Trajectory: 2h
+   - Explosion: 2h
+   - Bugfixing: 2h
+
+ - Wednesday 25: **Finish Explosion + Readmen**
+   - Explosion: 2h
+   - Bugfixing: 2h
+   - Readme: 2h
+
+**Total development time** : **36h**
