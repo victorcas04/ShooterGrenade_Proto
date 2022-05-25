@@ -84,6 +84,15 @@ NOTE: all default actors, components and systems already given by unreal's sampl
        - `ExplosionDamagedActor_BP(AActor* DamagedActor, float DamageApplied)` -> exposed function to blueprints in case any other team member want 
        to do something with it (like playing a sound of a soldier saying you hit someone)
 
+#### Utils
+
+I also needed to make a utility file `GrenadeTestHelpers` for some functions:
+ - `GetValidatedComponentByClass(AActor* Target, TSubclassOf<UActorComponent> ComponentClass, GTestEObjectIsValid& OutResult)`
+ -> gets the first component from an actor. Also returns Valid or NotValid
+ - `GetValidatedComponentByClassWithTag(AActor* Target, TSubclassOf<UActorComponent> ComponentClass, FName Tag, GTestEObjectIsValid& OutResult)`
+ -> gets the first component from an actor with a given tag. Also returns Valid or NotValid
+ - `ExistsWallBetweenActors(AActor* OriginActor, AActor* TargetActor, ECollisionChannel TraceChannelToCheck = ECollisionChannel::ECC_EngineTraceChannel2)`
+ -> checks if there is something between two actors given a collision channel
 
 ## Problems encountered
 
