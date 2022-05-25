@@ -33,6 +33,7 @@ void AGrenadeExplosion::BeginPlay()
 	
 	if(IsValid(TriggerExplosion))
 	{
+		TriggerExplosion->SetHiddenInGame(!GrenadeExplosionData.bShowTriggerSphere);
 		TriggerExplosion->OnComponentBeginOverlap.AddDynamic(this, &AGrenadeExplosion::OnTriggerExplosionEnter);
 		TriggerExplosion->OnComponentEndOverlap.AddDynamic(this, &AGrenadeExplosion::OnTriggerExplosionExit);
 		TriggerExplosion->SetSphereRadius(GrenadeExplosionData.ExplosionRadius);
@@ -43,7 +44,7 @@ void AGrenadeExplosion::BeginPlay()
 	
 	if(GrenadeExplosionData.bExplosionPersists)
 	{
-		CurrentDamage = GrenadeExplosionData.DPS;
+		CurrentDamage = GrenadeExplosionData.PersistDamage;
 		if(GrenadeExplosionData.DelayBeforeExplosionEnds > .0f)
 		{
 			GetWorldTimerManager().SetTimer(DelayBeforeExplosionEndsHandle,

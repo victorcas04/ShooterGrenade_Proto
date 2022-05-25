@@ -10,11 +10,11 @@ struct FGrenadeExplosionData
 {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bCanDamageOwner = true;
 	
 	/** type of damage */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<UDamageType> DamageType;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -35,7 +35,10 @@ struct FGrenadeExplosionData
 	float DelayBeforeExplosionEnds = 3.0f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="bExplosionPersists"))
-	float DPS = 10.0f;
+	float PersistDamage = 10.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bShowTriggerSphere = true;
 };
 
 UCLASS()
@@ -66,7 +69,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void ExplosionDamagedActor_BP(AActor* DamagedActor, float DamageApplied);
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USphereComponent* TriggerExplosion;
 	
 	virtual void Tick(float DeltaTime) override;
