@@ -120,6 +120,7 @@ I also needed to make a utility file `GrenadeTestHelpers` for some functions:
  - Trajectory: the trajectory shown while holding the left click button can be improved to include the movement of the grenade after the first bounce. Also, it seems like it has a little bit of an offset, so needs more tunning.
  - Grenade types: currently we have a basic grenade, that bounces and explodes after a while, but originally I wanted to create also a "sticky" grenade, so it would not bounce on walls for example. The architecture supports it and it's only a matter of creating a new type of grenade and add it to the inventory array, but didn't have time to implement that one.
  - FX: the grenade does not spawn any effect or sound when exploding, but the functions where they should be implemented are exposed to blueprints, so any tech artist or designer can do that.
+ - Ammo pickups: had no time to implement the proper way to add ammo with current pickups, since the system is meant to be used with already spawned weapons all the time (like the "normal" weapons, which are spawned at the beginning of the game. But grenade weapons are only spawned when equipped, so I would need to rework that part a little bit, but it was not a requisite for the test, so I did not invest so much time in that.
 
 ## Timeline
 
